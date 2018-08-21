@@ -8,10 +8,20 @@ package com.inspur.chengyujia.refactoring;
  * modified on 2018年8月20日<br/>
  * description: 增加了抽象方法getCharge<br/>
  * author: cedric<br/>
+ * modified on 2018年8月21日<br/>
+ * description: 增加了公共方法getFrequentRenderPoints<br/>
+ * author: cedric<br/>
  */
 abstract class Price {
 	protected abstract int getPriceCode();
 	protected abstract double getCharge(int daysRented);
+	protected int getFrequentRenderPoints(int daysRented) {
+		if((getPriceCode() == Movie.NEW_RELEASE) && daysRented > 1) {
+			return 2;
+		} else {
+			return 1;
+		}
+	}
 }
 /**
  * 儿童类价格策略<br/>
@@ -20,6 +30,9 @@ abstract class Price {
  * author: cedric<br/>
  * modified on 2018年8月20日<br/>
  * description: 重写了getCharge方法，策略模式<br/>
+ * author: cedric<br/>
+ * modified on 2018年8月21日<br/>
+ * description: 重写了getFrequentRenderPoints方法<br/>
  * author: cedric<br/>
  */
 class ChildrenPrice extends Price {
@@ -34,6 +47,10 @@ class ChildrenPrice extends Price {
 			result += (daysRented - 2) * 1.5;
 		}
 		return result;
+	}
+	@Override
+	protected int getFrequentRenderPoints(int daysRented) {
+		return (daysRented > 1) ? 2 : 1;
 	}
 }
 /**
@@ -63,6 +80,9 @@ class NewReleasePrice extends Price {
  * modified on 2018年8月20日<br/>
  * description: 重写了getCharge方法，策略模式<br/>
  * author: cedric<br/>
+ * modified on 2018年8月21日<br/>
+ * description: 重写了getFrequentRenderPoints方法<br/>
+ * author: cedric<br/>
  */
 class RegularPrice extends Price {
 	@Override
@@ -76,6 +96,10 @@ class RegularPrice extends Price {
 			result += (daysRented - 3) * 1.5;
 		}
 		return result;
+	}
+	@Override
+	protected int getFrequentRenderPoints(int daysRented) {
+		return 1;
 	}
 }
 /**
@@ -127,11 +151,6 @@ public class Movie {
 		return _price.getCharge(daysRented);
 	}
 	public int getFrequentRenderPoints(int daysRented) {
-		if((getPriceCode() == Movie.NEW_RELEASE) &&
-				 daysRented > 1) {
-			return 2;
-		} else {
-			return 1;
-		}
+		return _price.getFrequentRenderPoints(daysRented);
 	}
 }
